@@ -4,17 +4,17 @@ all: reports-default reports-styled reports-docx slides
 
 slides: slides/index.html
 
-slides/index.html: slides/slides.Rmd
-Rscript -e 'xfun::in_dir("slides", rmarkdown::render("$(<F)", output_file = "$(@F)", quiet = TRUE))'
+styling/index.html: styling/slides.Rmd
+Rscript -e 'xfun::in_dir("styling", rmarkdown::render("$(<F)", output_file = "$(@F)", quiet = TRUE))'
 
 # targets for demo files
 DEMORMD = styling-bootstrap.Rmd
 
-reports-styled: slides/styling-bootstrap-styled.html
+reports-styled: styling/styling-bootstrap-styled.html
 
-reports-default: slides/styling-bootstrap-default.html
+reports-default: styling/styling-bootstrap-default.html
 
-reports-docx: slides/pinguins-report.docx
+reports-docx: slides/june-report.docx
 
 slides/styling-bootstrap-styled.html: $(DEMORMD)
 Rscript -e 'rmarkdown::render("$<", output_file = "$(@F)", quiet = TRUE)'
@@ -26,9 +26,9 @@ Rscript -e 'rmarkdown::render("$<", output_file = "$(@F)", rmarkdown::html_docum
 mv $(@F) $@
   cp $< $(@D)
 
-DEMODOCX = pinguins-report.Rmd
+DEMODOCX = june-report.Rmd
 
-slides/pinguins-report.docx: pinguins-report.Rmd template.docx
+slides/pinguins-report.docx: june-report.Rmd template.docx
 Rscript -e 'rmarkdown::render("$<", output_file = "$(@F)", quiet = TRUE)'
 mv $(@F) $@
   cp -t $(@D) $^
@@ -41,8 +41,10 @@ netlify deploy --dir=. --prod || echo '## >> netlify not configured - deployemen
 
 clean:
   rm slides/styling-bootstrap-styled.html
-rm slides/styling-bootstrap-default.html
-rm slides/pinguins-report.docx
-rm slides/template.docx
-rm slides/pinguins-report.Rmd
-rm slides/styling-bootstrap.Rmd
+  rm styling/styling-bootstrap-default.html
+  rm styling/styling-bootstrap.Rmd
+  rm climate-reports/june-report.docx
+  rm climate-reports/template.docx
+  rm climate-reports/june-report.Rmd
+
+
