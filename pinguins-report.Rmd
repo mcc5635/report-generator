@@ -32,7 +32,7 @@ knitr::kable(mean_metric)
 ```
 
 ```{r, echo = FALSE, out.width='75%'}
-# https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png
+# https://allisonhorst.github.io/palmerpenguins/reference/figures/carbon-markets.jpg
 knitr::include_graphics("carbon-markets.jpg")
 ```
 
@@ -49,8 +49,8 @@ The **`r heaviest_specie`** specie is heavier than other !
 ## Where do they live ? 
 
 ```{r species-fig, out.width='60%', echo = FALSE}
-# https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png
-knitr::include_graphics("lter_penguins.png")
+# https://allisonhorst.github.io/palmerpenguins/reference/figures/emission_types.png
+knitr::include_graphics("emission_types.png")
 ```
 
 ```{r island-repart, echo = FALSE}
