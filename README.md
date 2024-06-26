@@ -82,7 +82,7 @@ report-generator/
 ### Customizing the Slides
 
 - Modify the `styling/slides.Rmd` file to customize the report slides.
-- Use `slides/custom.scss` for custom styling.
+- Use `styling/custom.scss` for custom styling.
 
 ### Contributions
 
