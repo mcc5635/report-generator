@@ -26,6 +26,8 @@ source("../assets/emission_types.png")
 
 source("../r/data_wrangling.R")
 
+knitr::include_graphics("../assets/cover.png")
+
 # Example data frame simulating data_df
 data_df <- data.frame(
   entityId = "US410417775",
