@@ -8,65 +8,85 @@ output:
     reference_doc: template.docx
 ---
 
-## About the data
+## Scope 1 and Scope 2 Emissions
 
-**econoomy.com**  (https://www.economy.com/) is a provider of economic analysis, data, forecasts, scenarios, models and advisory services.
+Visualize the Scope 1 and Scope 2 emissions from the retrieved data.
 
-```{r packages, include=FALSE, warning = FALSE, message = FALSE}
-library(palmerpenguins)
+```{r scope-emissions, echo=FALSE, warning=FALSE, message=FALSE}
 library(dplyr)
 library(ggplot2)
-library(requests)
-library(httr)
-```
+library(tidyr)
+library(knitr)
 
-## Add API Call Here
+source("../r/data_wrangling.R")
+source("../assets/cover.png")
+source("../assets/risk-types.png")
+source("../assets/emission_types.png")
 
-# The EDF-X API provides easy access to these calculation methods and directly to PDs for the approximately 400 million (publicly listed and private) companies in Orbis globally
+# Example data frame simulating data_df
+data_df <- data.frame(
+  entityId = "US410417775",
+  quantitativeInputs.scope1Emission = 77774.65,
+  quantitativeInputs.scope2Emission = 15475.56,
+  riskTypes.transition = FALSE,
+  riskTypes.physical = FALSE,
+  riskTypes.combined = TRUE,
+  stringsAsFactors = FALSE
+)
+
+# Extract Scope 1 and Scope 2 emissions data
+
+emissions_data <- data_df %>%
+  mutate(scope1 = quantitativeInputs.scope1Emission,
+         scope2 = quantitativeInputs.scope2Emission) %>%
+  select(scope1, scope2)
+
+# Plot Scope 1 and Scope 2 emissions
+knitr::include_graphics("../assets/emission_types.png")
+
+
+ggplot(emissions_data) +
+  geom_bar(aes(x = "Scope 1 Emissions", y = scope1), stat = "identity", fill = "steelblue") +
+  geom_bar(aes(x = "Scope 2 Emissions", y = scope2), stat = "identity", fill = "darkorange") +
+  labs(title = "Scope 1 and Scope 2 Emissions",
+       x = "Emission Type",
+       y = "Emissions (tons)") +
+  theme_minimal()
+
+# Extract Climate Risk Types data
+knitr::include_graphics("../assets/risk-types.png")
+
+risk_data <- data_df %>%
+  mutate(transition = riskTypes.transition,
+         physical = riskTypes.physical,
+         combined = riskTypes.combined) %>%
+  select(transition, physical, combined)
+
+# Convert to long format for plotting
+
+risk_data_long <- risk_data %>%
+  pivot_longer(cols = c("transition", "physical", "combined"), names_to = "risk_type", values_to = "value")
+
+# Plot Climate Risk Types
+ggplot(risk_data_long) +
+  geom_bar(aes(x = risk_type, y = value, fill = risk_type), stat = "identity") +
+  labs(title = "Climate Risk Types",
+       x = "Risk Type",
+       y = "Presence") +
+  theme_minimal()
+
+# Display the final data frame
+kable(data_df)
 
 
 
 
-## Interesting Metrics
 
-We can get some interesting mean metrics for each species:
 
-```{r}
-mean_metric <- penguins %>%
-  group_by(species) %>%
-  select(-year) %>%
-  summarize(across(where(is.numeric), mean, na.rm = TRUE))
-knitr::kable(mean_metric)
-```
 
-```{r, echo = FALSE, out.width='75%'}
-# https://allisonhorst.github.io/palmerpenguins/reference/figures/carbon-markets.jpg
-knitr::include_graphics("carbon-markets.jpg")
-```
 
-```{r, include = FALSE}
-heaviest_specie <- mean_metric %>%
-  filter(body_mass_g == max(body_mass_g)) %>% 
-  pull(species)
-```
 
-::: {custom-style=highlight-box}
-The **`r heaviest_specie`** specie is heavier than other ! 
-:::
 
-## Where do they live ? 
 
-```{r species-fig, out.width='60%', echo = FALSE}
-# https://allisonhorst.github.io/palmerpenguins/reference/figures/emission_types.png
-knitr::include_graphics("emission_types.png")
-```
 
-```{r island-repart, echo = FALSE}
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
+
