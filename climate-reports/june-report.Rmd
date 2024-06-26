@@ -18,10 +18,13 @@ library(ggplot2)
 library(tidyr)
 library(knitr)
 
-source("../r/data_wrangling.R")
+
 source("../assets/cover.png")
 source("../assets/risk-types.png")
 source("../assets/emission_types.png")
+
+
+source("../r/data_wrangling.R")
 
 # Example data frame simulating data_df
 data_df <- data.frame(
